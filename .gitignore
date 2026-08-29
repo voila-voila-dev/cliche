@@ -4,3 +4,4 @@ dist
 *.png
 !assets/og.png
 !site/public/og.png
+!site/public/album.png

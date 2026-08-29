@@ -56,8 +56,23 @@ function demoShots(): Array<Shot> {
   return shots;
 }
 
-/** The bucket's shots, or a generated demo album when nothing is configured. */
+/**
+ * The bucket's shots — or a JSON manifest (`CLICHE_ALBUM_MANIFEST`, an array
+ * of `{key, url, size?, date?}`) when listing credentials are not available,
+ * or a generated demo album when nothing is configured at all.
+ */
 export async function listShots(): Promise<{ demo: boolean; shots: Array<Shot> }> {
+  const manifestPath = process.env.CLICHE_ALBUM_MANIFEST;
+  if (manifestPath !== undefined) {
+    const entries = (await Bun.file(manifestPath).json()) as Array<Partial<Shot>>;
+    const shots = entries.map((entry) => ({
+      key: entry.key ?? "",
+      url: entry.url ?? "",
+      size: entry.size ?? 0,
+      date: entry.date ?? dateOf(entry.key ?? "", undefined),
+    }));
+    return { demo: false, shots };
+  }
   try {
     const baseUrl = publicBaseUrl();
     return { demo: false, shots: await listBucket(baseUrl) };

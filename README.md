@@ -182,6 +182,11 @@ retrospective machine.
 cd apps/album && bun dev                # reads the same S3_* env; demo album if none
 ```
 
+<img src="assets/album-preview.png" alt="l'album — real tries.care pages captured by cliche, grouped by month as polaroids" width="100%">
+
+*(Real example: [tries.care](https://tries.care)'s pages, captured by cliche,
+served from its PR-screenshots bucket.)*
+
 ## Claude Code skill
 
 A ready-made [Claude Code](https://claude.com/claude-code) PR-screenshots
