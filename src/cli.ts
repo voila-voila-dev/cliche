@@ -15,6 +15,7 @@ Usage:
   cliche mcp                              Serve the tools over MCP (stdio).
   cliche setup [--bucket name]            Create an R2 bucket via wrangler and
                                           write the S3 config to .env.
+  cliche album [--port 4949]              Browse the bucket as a photo album.
   cliche skill                            Install the PR-screenshots skill into
                                           .claude/skills/ (Claude Code).
 
@@ -23,6 +24,7 @@ Capture options:
   --wait-for <css>            Wait for a selector before shooting (15s max).
   --scroll-to <css>           Scroll a selector into view before shooting.
   --settle <ms>               Let the page settle after load, default 1500.
+  --full-page                 Grow the viewport to the full page height.
   --local-storage key=value   Seed localStorage on the target origin
                               (repeatable; e.g. a session token).
 
@@ -57,6 +59,19 @@ async function main(): Promise<void> {
     case "setup":
       await setup(command.bucket);
       return;
+    case "album": {
+      if (command.port !== undefined) process.env.PORT = String(command.port);
+      // Dynamic with a computed specifier so tsc ships it untouched: the album
+      // is TS + HTML imports that Bun resolves at runtime from the package.
+      const albumEntry = "../apps/album/src/index.ts";
+      await import(albumEntry);
+      const url = `http://localhost:${process.env.PORT ?? 4949}`;
+      const opener = process.platform === "darwin" ? "open" : "xdg-open";
+      Bun.spawn([opener, url], { stdout: "ignore", stderr: "ignore" });
+      // Keep the process alive for the server.
+      await new Promise(() => {});
+      return;
+    }
     case "upload": {
       const uploaded = await upload({
         files: command.files,

@@ -77,6 +77,7 @@ cliche <url> <out.png> [options]
 | `--wait-for <css>` | Hold the shot until a selector exists — SPAs render late. |
 | `--scroll-to <css>` | Scroll a component into view before shooting. |
 | `--settle <ms>` | Let fonts/images/animations finish, default `1500`. |
+| `--full-page` | Grow the viewport to the full page height — the whole page in one shot. |
 | `--local-storage k=v` | Seed the target origin's localStorage (repeatable). |
 
 The `--local-storage` flag is the trick for authenticated screens: seed your
@@ -173,16 +174,18 @@ done. Any other S3-compatible service works too with the plain env vars.
 
 ## The album 📔
 
-`apps/album` is a tiny Bun fullstack app (HTML imports, zero deps, of
-course) that turns your bucket into a browsable photo album: every cliché,
+One command turns your bucket into a browsable photo album — every cliché,
 grouped by month, polaroid-style, with filtering and a lightbox. This is the
-retrospective machine.
+retrospective machine:
 
 ```sh
-cd apps/album && bun dev                # reads the same S3_* env; demo album if none
+bunx @voila.dev/cliche album            # reads the same S3_* env; demo album if none
 ```
 
-<img src="assets/album-preview.png" alt="l'album — real tries.care pages captured by cliche, grouped by month as polaroids" width="100%">
+It's a tiny Bun fullstack app (HTML imports, zero deps, of course) that
+ships inside the package — the source lives in `apps/album`.
+
+<img src="assets/album-preview.png" alt="album — real tries.care pages captured by cliche, grouped by month as polaroids" width="100%">
 
 *(Real example: [tries.care](https://tries.care)'s pages, captured by cliche,
 served from its PR-screenshots bucket.)*

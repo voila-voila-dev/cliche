@@ -71,6 +71,22 @@
   .card h3 { font-size: 22px; letter-spacing: -0.5px; }
   .card p { font-size: 16px; color: #4a4438; margin-top: 8px; }
   .shot { border: 3px solid #1d1a14; border-radius: 18px; box-shadow: 7px 7px 0 rgba(29,26,20,0.9); width: 100%; display: block; margin-top: 32px; }
+  .pipeline { display: flex; align-items: stretch; gap: 14px; margin-top: 24px; }
+  @media (max-width: 760px) { .pipeline { flex-direction: column; } .pipe-arrow { transform: rotate(90deg); align-self: center; } }
+  .step {
+    flex: 1; background: #fff; border: 3px solid #1d1a14; border-radius: 18px;
+    padding: 20px 22px; box-shadow: 7px 7px 0 rgba(29,26,20,0.9);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .step-emoji { font-size: 34px; }
+  .step h3 { font-size: 20px; letter-spacing: -0.5px; }
+  .step p { font-size: 15px; color: #4a4438; flex: 1; }
+  .step-code {
+    font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 13px;
+    background: #1d1a14; color: #f5efe2; border-radius: 9px; padding: 8px 12px;
+    white-space: nowrap; overflow-x: auto;
+  }
+  .pipe-arrow { align-self: center; font-size: 30px; font-weight: 800; color: #ff6600; }
   ul.features { margin: 12px 0 0 20px; color: #4a4438; font-size: 17px; }
   ul.features li { margin-top: 6px; }
   ul.features strong { color: #1d1a14; }
@@ -124,25 +140,49 @@
     </div>
   </div>
 
-  <img class="shot" src="/og.png" alt="cliche before/after and photo album illustration — itself captured by cliche">
-  <p style="margin-top:10px;color:#8d8471;font-size:14px;text-align:center">This image was captured by cliche, from an HTML file, in one command. Obviously.</p>
+  <h2>How it works</h2>
+  <div class="pipeline">
+    <div class="step">
+      <div class="step-emoji">📸</div>
+      <h3>1. Capture</h3>
+      <p><code>Bun.WebView</code> renders the page — system WKWebView on macOS,
+      your Chrome elsewhere. Nothing to install, retina PNGs out.</p>
+      <div class="step-code">cliche localhost:3000 shot.png</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="step">
+      <div class="step-emoji">🪣</div>
+      <h3>2. Upload</h3>
+      <p><code>Bun.S3Client</code> pushes it to <em>your</em> bucket — R2, S3,
+      MinIO — under a content-hashed, dated key that never breaks.</p>
+      <div class="step-code">--upload --prefix pr-123</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="step">
+      <div class="step-emoji">🔗</div>
+      <h3>3. Paste</h3>
+      <p>The public URL lands on stdout (<code>--markdown</code> for a
+      ready-made image line). Straight into the PR body.</p>
+      <div class="step-code">gh pr edit 123 --body "…"</div>
+    </div>
+  </div>
 
   <h2>The album 📔</h2>
-  <p style="color:#4a4438;font-size:17px">A tiny Bun app (in the repo: <code>apps/album</code>) turns your bucket into a
-  browsable photo album — every cliché, month by month, polaroid-style. Here it is
+  <p style="color:#4a4438;font-size:17px"><code>bunx @voila.dev/cliche album</code> opens your bucket as a browsable
+  photo album — every cliché, month by month, polaroid-style. Here it is
   running on <a href="https://tries.care">tries.care</a>'s real PR-screenshots bucket:</p>
-  <img class="shot" src="/album.png" alt="l'album — real tries.care pages captured by cliche, grouped by month as polaroids" loading="lazy">
+  <img class="shot" src="/album.png" alt="album — real tries.care pages captured by cliche, grouped by month as polaroids" loading="lazy">
   <p style="margin-top:10px;color:#8d8471;font-size:14px;text-align:center">Yes, this screenshot of the album of screenshots was also taken by cliche. It's clichés all the way down.</p>
 
   <h2>What's in the box</h2>
   <ul class="features">
-    <li><strong>Capture</strong> — <code>Bun.WebView</code>: system WKWebView on macOS, your installed Chrome on Linux/Windows. Viewports, <code>--wait-for</code>, <code>--scroll-to</code>, <code>--local-storage</code> to boot authenticated screens.</li>
+    <li><strong>Capture</strong> — <code>Bun.WebView</code>: system WKWebView on macOS, your installed Chrome on Linux/Windows. Viewports, <code>--full-page</code> for the whole page in one shot, <code>--wait-for</code>, <code>--scroll-to</code>, <code>--local-storage</code> to boot authenticated screens.</li>
     <li><strong>Upload</strong> — <code>Bun.S3Client</code>: R2, AWS S3, MinIO, anything S3-compatible, configured by the standard <code>S3_*</code> env vars you already have.</li>
     <li><strong>URL out</strong> — bare URLs on stdout by default, <code>--markdown</code> for ready-to-paste <code>![caption](url)</code> lines.</li>
     <li><strong>MCP in</strong> — <code>cliche mcp</code> serves <code>screenshot</code> and <code>upload</code> to any MCP client over stdio. Hand-rolled JSON-RPC, still zero dependencies.</li>
     <li><strong>One-command R2 setup</strong> — <code>cliche setup</code> creates the bucket and its public URL through your <code>wrangler login</code>, and writes the config to <code>.env</code>.</li>
     <li><strong>Claude Code skill</strong> — <code>bunx @voila.dev/cliche skill</code> installs the PR-screenshots skill into <code>.claude/skills/</code>. Also served at <a href="/skill.md">/skill.md</a>.</li>
-    <li><strong>The album</strong> — a tiny Bun app that turns the bucket into a browsable photo album of your app, month by month.</li>
+    <li><strong>The album</strong> — <code>bunx @voila.dev/cliche album</code> opens the bucket as a browsable photo album of your app, month by month.</li>
   </ul>
 
   <div class="footer">

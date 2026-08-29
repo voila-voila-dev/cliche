@@ -31,6 +31,11 @@ export interface SetupCommand {
   readonly bucket: string;
 }
 
+export interface AlbumCommand {
+  readonly kind: "album";
+  readonly port: number | undefined;
+}
+
 export interface HelpCommand {
   readonly kind: "help";
 }
@@ -41,6 +46,7 @@ export type Command =
   | McpCommand
   | SkillCommand
   | SetupCommand
+  | AlbumCommand
   | HelpCommand;
 
 export function parseViewport(value: string): Viewport {
@@ -73,10 +79,12 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
       "scroll-to": { type: "string" },
       settle: { type: "string" },
       "local-storage": { type: "string", multiple: true },
+      "full-page": { type: "boolean" },
       upload: { type: "boolean" },
       prefix: { type: "string" },
       markdown: { type: "boolean" },
       bucket: { type: "string" },
+      port: { type: "string" },
       help: { type: "boolean", short: "h" },
     },
   });
@@ -91,6 +99,13 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
   }
   if (positionals[0] === "setup") {
     return { kind: "setup", bucket: values.bucket ?? "cliche-shots" };
+  }
+  if (positionals[0] === "album") {
+    const port = values.port === undefined ? undefined : Number(values.port);
+    if (port !== undefined && !Number.isInteger(port)) {
+      throw new Error(`Invalid --port ${values.port}: expected a number.`);
+    }
+    return { kind: "album", port };
   }
   if (positionals[0] === "upload") {
     const files = positionals.slice(1);
@@ -117,6 +132,7 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
       ...(values["local-storage"] === undefined
         ? {}
         : { localStorage: parseLocalStorage(values["local-storage"]) }),
+      ...(values["full-page"] === true ? { fullPage: true } : {}),
     },
     upload: values.upload === true,
     prefix: values.prefix,

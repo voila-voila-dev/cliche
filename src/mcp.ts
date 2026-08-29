@@ -54,6 +54,10 @@ const TOOLS = [
           type: "number",
           description: "Milliseconds to let the page settle after load. Defaults to 1500.",
         },
+        full_page: {
+          type: "boolean",
+          description: "Grow the viewport to the full page height before shooting.",
+        },
         local_storage: {
           type: "object",
           additionalProperties: { type: "string" },
@@ -128,6 +132,7 @@ async function callTool(
       ...(typeof input.wait_for === "string" ? { waitFor: input.wait_for } : {}),
       ...(typeof input.scroll_to === "string" ? { scrollTo: input.scroll_to } : {}),
       ...(typeof input.settle_ms === "number" ? { settleMilliseconds: input.settle_ms } : {}),
+      ...(input.full_page === true ? { fullPage: true } : {}),
       ...(input.local_storage !== undefined && typeof input.local_storage === "object"
         ? { localStorage: input.local_storage as Record<string, string> }
         : {}),

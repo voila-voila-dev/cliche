@@ -37,6 +37,7 @@
     "dist",
     "src",
     "skill",
+    "apps/album/src",
     "README.md",
     "LICENSE"
   ],

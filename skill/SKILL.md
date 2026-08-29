@@ -29,7 +29,8 @@ bunx @voila.dev/cliche http://localhost:3000/changed-screen \
 
 - `--local-storage <key>=<token>` seeds a session token for authenticated
   screens; `--scroll-to <css>` reaches below-the-fold components;
-  `--viewport 390x844` for responsive changes (default is 1440x900).
+  `--viewport 390x844` for responsive changes (default is 1440x900);
+  `--full-page` when the whole screen changed.
 - Use demo/seed data only — never real user data, the bucket is public.
 - Name files as captions: `mission-detail-after.png` reads as
   "mission detail after".

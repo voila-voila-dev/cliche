@@ -78,6 +78,15 @@ describe("parseCommand", () => {
     expect(parseCommand(["mcp"])).toEqual({ kind: "mcp" });
   });
 
+  test("full-page flag", () => {
+    const command = parseCommand(["http://localhost:3000", "shot.png", "--full-page"]);
+    expect(command.kind === "capture" && command.capture.fullPage).toBe(true);
+  });
+
+  test("album subcommand with a port", () => {
+    expect(parseCommand(["album", "--port", "5000"])).toEqual({ kind: "album", port: 5000 });
+  });
+
   test("upload requires files", () => {
     expect(() => parseCommand(["upload"])).toThrow("at least one image");
   });

@@ -24,7 +24,12 @@ export interface CaptureOptions {
   readonly scrollTo?: string;
   /** Milliseconds to let the page settle after load. Defaults to 1500. */
   readonly settleMilliseconds?: number;
+  /** Grow the viewport to the full page height before shooting. */
+  readonly fullPage?: boolean;
 }
+
+// Bun.WebView rejects viewport dimensions above 16384 pixels.
+const MAXIMUM_VIEWPORT_HEIGHT = 16_384;
 
 function sleep(milliseconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -63,6 +68,15 @@ export async function capture(options: CaptureOptions): Promise<void> {
   // A fixed delay for fonts, images and entrance animations: dev servers keep
   // an HMR socket open, so there is no network-idle moment to wait for.
   await sleep(options.settleMilliseconds ?? 1500);
+  if (options.fullPage === true) {
+    const pageHeight = await view.evaluate<number>(
+      "Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)",
+    );
+    if (pageHeight > viewport.height) {
+      await view.resize(viewport.width, Math.min(pageHeight, MAXIMUM_VIEWPORT_HEIGHT));
+      await sleep(400);
+    }
+  }
   if (options.scrollTo !== undefined) {
     await view.scrollTo(options.scrollTo);
     await sleep(300);
