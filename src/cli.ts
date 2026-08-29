@@ -2,6 +2,8 @@
 import { capture } from "./capture.ts";
 import { runMcpServer } from "./mcp.ts";
 import { parseCommand } from "./options.ts";
+import { setup } from "./setup.ts";
+import { installSkill } from "./skill.ts";
 import { upload, type UploadedFile } from "./upload.ts";
 
 const HELP = `cliche — take a cliché of any page and get a shareable URL.
@@ -11,6 +13,10 @@ Usage:
   cliche <url> <out.png> --upload         …and upload it, printing its URL.
   cliche upload [--prefix pr-123] <files> Upload images, printing their URLs.
   cliche mcp                              Serve the tools over MCP (stdio).
+  cliche setup [--bucket name]            Create an R2 bucket via wrangler and
+                                          write the S3 config to .env.
+  cliche skill                            Install the PR-screenshots skill into
+                                          .claude/skills/ (Claude Code).
 
 Capture options:
   --viewport <WxH>            Viewport, default 1440x900 (390x844 for mobile).
@@ -42,6 +48,14 @@ async function main(): Promise<void> {
       return;
     case "mcp":
       await runMcpServer();
+      return;
+    case "skill": {
+      const target = await installSkill();
+      console.error(`Installed the PR-screenshots skill at ${target}`);
+      return;
+    }
+    case "setup":
+      await setup(command.bucket);
       return;
     case "upload": {
       const uploaded = await upload({

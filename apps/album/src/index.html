@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>l'album — cliche 📸</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="tricolore"></div>
+  <header>
+    <div class="brand">
+      <span class="camera">📸</span>
+      <div>
+        <h1>l'album<span class="accent">.</span></h1>
+        <p class="tagline">Your app, release by release — every cliché in the bucket.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <input id="filter" type="search" placeholder="Filter by key… (pr-123, checkout)">
+      <span id="count" class="count"></span>
+    </div>
+  </header>
+  <div id="demo-banner" class="demo-banner" hidden>
+    Demo album — no bucket configured. Run <code>bunx @voila.dev/cliche setup</code> to plug yours.
+  </div>
+  <main id="album"></main>
+  <dialog id="lightbox">
+    <img id="lightbox-image" alt="">
+    <div class="lightbox-bar">
+      <span id="lightbox-key"></span>
+      <button id="lightbox-copy">Copy URL</button>
+      <button id="lightbox-close">Close</button>
+    </div>
+  </dialog>
+  <script type="module" src="./app.ts"></script>
+</body>
+</html>

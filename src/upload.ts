@@ -28,7 +28,7 @@ export interface ObjectWriter {
   write(key: string, bytes: Uint8Array, options: { type: string }): Promise<unknown>;
 }
 
-function publicBaseUrl(): string {
+export function publicBaseUrl(): string {
   const configured = process.env.CLICHE_PUBLIC_URL;
   if (configured !== undefined) return configured.replace(/\/$/, "");
   const bucket = process.env.S3_BUCKET ?? process.env.AWS_BUCKET;

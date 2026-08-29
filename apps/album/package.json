@@ -1,0 +1,9 @@
+{
+  "name": "@voila.dev/cliche-album",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot src/index.ts",
+    "start": "bun src/index.ts"
+  }
+}

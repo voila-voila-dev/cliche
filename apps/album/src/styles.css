@@ -1,0 +1,64 @@
+* { margin: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #faf5ec; color: #1d1a14; padding-bottom: 80px;
+}
+.tricolore { height: 8px; background: linear-gradient(to right, #2563eb 33.3%, #fff 33.3% 66.6%, #ef4444 66.6%); }
+header {
+  max-width: 1100px; margin: 0 auto; padding: 40px 24px 8px;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 16px; }
+.camera { font-size: 48px; transform: rotate(-8deg); filter: drop-shadow(4px 6px 0 rgba(29,26,20,0.12)); }
+h1 { font-size: 52px; letter-spacing: -2px; font-weight: 800; }
+h1 .accent { color: #ff6600; }
+.tagline { color: #4a4438; font-size: 17px; }
+.controls { display: flex; align-items: center; gap: 14px; }
+#filter {
+  font: inherit; font-size: 16px; padding: 10px 16px; width: 300px;
+  border: 3px solid #1d1a14; border-radius: 12px; background: #fff;
+  box-shadow: 4px 4px 0 rgba(29,26,20,0.9); outline: none;
+}
+.count { font-weight: 700; color: #4a4438; white-space: nowrap; }
+.demo-banner {
+  max-width: 1100px; margin: 20px auto 0; padding: 12px 20px;
+  background: #ff6600; color: #fff; font-weight: 700; border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba(29,26,20,0.9);
+}
+.demo-banner code { background: rgba(29,26,20,0.35); padding: 2px 8px; border-radius: 6px; font-weight: 400; }
+main { max-width: 1100px; margin: 0 auto; padding: 12px 24px; }
+h2.month {
+  font-size: 28px; letter-spacing: -1px; margin: 44px 0 4px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+h2.month .n { font-size: 15px; color: #8d8471; font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 26px; margin-top: 18px; }
+.polaroid {
+  background: #fff; border: 2px solid #1d1a14; border-radius: 8px;
+  padding: 8px 8px 6px; cursor: zoom-in;
+  box-shadow: 5px 5px 0 rgba(29,26,20,0.25);
+  transition: transform 0.15s ease;
+}
+.polaroid:nth-child(3n+1) { transform: rotate(-1.6deg); }
+.polaroid:nth-child(3n+2) { transform: rotate(1.2deg); }
+.polaroid:nth-child(4n+3) { transform: rotate(-0.7deg); }
+.polaroid:hover { transform: rotate(0deg) scale(1.04); box-shadow: 7px 7px 0 rgba(29,26,20,0.9); }
+.polaroid img { width: 100%; aspect-ratio: 8/5; object-fit: cover; object-position: top; border-radius: 4px; background: #eee7d8; display: block; }
+.polaroid .caption { font-size: 14px; font-weight: 700; padding: 8px 4px 2px; }
+.polaroid .meta { font-size: 12px; color: #8d8471; padding: 0 4px 2px; }
+.empty { text-align: center; color: #8d8471; font-size: 18px; padding: 80px 0; }
+dialog#lightbox {
+  border: 3px solid #1d1a14; border-radius: 16px; padding: 12px;
+  max-width: min(1200px, 92vw); background: #fff;
+  box-shadow: 10px 10px 0 rgba(29,26,20,0.9);
+}
+dialog#lightbox::backdrop { background: rgba(29,26,20,0.55); }
+#lightbox-image { max-width: 100%; max-height: 76vh; border-radius: 8px; display: block; }
+.lightbox-bar { display: flex; align-items: center; gap: 12px; padding-top: 12px; }
+#lightbox-key { font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #4a4438; flex: 1; overflow-wrap: anywhere; }
+.lightbox-bar button {
+  font: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
+  border: 2px solid #1d1a14; border-radius: 10px; padding: 8px 16px;
+  background: #ff6600; color: #fff; box-shadow: 3px 3px 0 rgba(29,26,20,0.9);
+}
+#lightbox-close { background: #fff; color: #1d1a14; }

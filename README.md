@@ -159,17 +159,41 @@ const [shot] = await upload({ files: ["home.png"], prefix: "pr-7" });
 console.log(shot.markdown);
 ```
 
-## Claude Code skill
-
-`skill/SKILL.md` in this package is a ready-made
-[Claude Code](https://claude.com/claude-code) skill: copy it to
-`.claude/skills/pr-screenshots/` in your repo and Claude captures, uploads,
-and embeds before/after screenshots whenever a PR touches something visible.
+## One-command S3 setup (Cloudflare R2)
 
 ```sh
-mkdir -p .claude/skills/pr-screenshots
-cp node_modules/@voila.dev/cliche/skill/SKILL.md .claude/skills/pr-screenshots/
+bunx @voila.dev/cliche setup            # or: setup --bucket my-shots
 ```
+
+Riding your existing `wrangler login`, this creates the R2 bucket, enables
+its managed public `*.r2.dev` URL, and writes `S3_BUCKET`, `S3_ENDPOINT` and
+`CLICHE_PUBLIC_URL` to `.env`. One thing wrangler can't mint: the two S3 API
+keys — the command prints the exact dashboard link, you paste two values,
+done. Any other S3-compatible service works too with the plain env vars.
+
+## The album 📔
+
+`apps/album` is a tiny Bun fullstack app (HTML imports, zero deps, of
+course) that turns your bucket into a browsable photo album: every cliché,
+grouped by month, polaroid-style, with filtering and a lightbox. This is the
+retrospective machine.
+
+```sh
+cd apps/album && bun dev                # reads the same S3_* env; demo album if none
+```
+
+## Claude Code skill
+
+A ready-made [Claude Code](https://claude.com/claude-code) PR-screenshots
+skill ships with the package — one line installs it into your repo:
+
+```sh
+bunx @voila.dev/cliche skill            # writes .claude/skills/pr-screenshots/SKILL.md
+```
+
+(Also served at [cliche.voila.dev/skill.md](https://cliche.voila.dev/skill.md)
+if you'd rather `curl` it.) With the skill in place, Claude captures, uploads,
+and embeds before/after screenshots whenever a PR touches something visible.
 
 ## Platform notes
 

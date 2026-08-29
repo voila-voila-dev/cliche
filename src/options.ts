@@ -22,11 +22,26 @@ export interface McpCommand {
   readonly kind: "mcp";
 }
 
+export interface SkillCommand {
+  readonly kind: "skill";
+}
+
+export interface SetupCommand {
+  readonly kind: "setup";
+  readonly bucket: string;
+}
+
 export interface HelpCommand {
   readonly kind: "help";
 }
 
-export type Command = CaptureCommand | UploadCommand | McpCommand | HelpCommand;
+export type Command =
+  | CaptureCommand
+  | UploadCommand
+  | McpCommand
+  | SkillCommand
+  | SetupCommand
+  | HelpCommand;
 
 export function parseViewport(value: string): Viewport {
   const match = value.match(/^(\d+)x(\d+)$/);
@@ -61,6 +76,7 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
       upload: { type: "boolean" },
       prefix: { type: "string" },
       markdown: { type: "boolean" },
+      bucket: { type: "string" },
       help: { type: "boolean", short: "h" },
     },
   });
@@ -69,6 +85,12 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
   }
   if (positionals[0] === "mcp") {
     return { kind: "mcp" };
+  }
+  if (positionals[0] === "skill") {
+    return { kind: "skill" };
+  }
+  if (positionals[0] === "setup") {
+    return { kind: "setup", bucket: values.bucket ?? "cliche-shots" };
   }
   if (positionals[0] === "upload") {
     const files = positionals.slice(1);

@@ -1,0 +1,19 @@
+# cliche
+
+> Take a "cliché" (French for snapshot) of any web page and get a shareable URL. A zero-dependency Bun CLI and local MCP server: screenshots via Bun.WebView (system WKWebView on macOS, installed Chrome via CDP on Linux/Windows), uploads via Bun.S3Client to any S3-compatible bucket (Cloudflare R2, AWS S3, MinIO). Built for pull-request screenshots: front-end PRs reviewed with their pixels, and an S3 bucket that becomes your app's visual history over time.
+
+Install: `bunx @voila.dev/cliche <url> <out.png> [--upload]` (requires Bun >= 1.4.0).
+MCP server: `claude mcp add cliche -- bunx @voila.dev/cliche mcp` (tools: `screenshot`, `upload`).
+R2 setup: `bunx @voila.dev/cliche setup` (creates the bucket and public URL via wrangler, writes .env).
+Claude Code skill: `bunx @voila.dev/cliche skill` (installs .claude/skills/pr-screenshots/SKILL.md), or fetch https://cliche.voila.dev/skill.md.
+Upload configuration: standard S3_BUCKET / S3_ENDPOINT / S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY environment variables, plus CLICHE_PUBLIC_URL for the bucket's public domain. Output is one public URL per file on stdout; `--markdown` yields `![caption](url)` lines.
+
+## Docs
+
+- [README](https://github.com/voila-voila-dev/cliche#readme): full CLI, MCP, API and configuration reference
+- [PR-screenshots skill](https://cliche.voila.dev/skill.md): the ready-made Claude Code skill
+- [npm package](https://www.npmjs.com/package/@voila.dev/cliche): @voila.dev/cliche
+
+## Source
+
+- [GitHub repository](https://github.com/voila-voila-dev/cliche): MIT-licensed source, issues and releases
