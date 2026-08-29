@@ -1,0 +1,13 @@
+{
+	"name": "cliche-voila-dev",
+	"compatibility_date": "2026-08-29",
+	"assets": {
+		"directory": "./public"
+	},
+	"routes": [
+		{
+			"pattern": "cliche.voila.dev",
+			"custom_domain": true
+		}
+	]
+}

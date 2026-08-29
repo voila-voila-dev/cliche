@@ -1,12 +1,18 @@
+<img src="assets/og.png" alt="cliche — un cliché of every page. Front-end PRs you can SEE, and a photo album of your app by accident." width="100%">
+
 # cliche 📸
 
 **Take a _cliché_ of any page and get a shareable URL.** No Playwright, no
-browser download, no dependencies — just Bun. Ouistiti !
+browser download, no dependencies — just Bun. Ouistiti ! 🐒
 
 > _Un cliché_ is French for a snapshot. This one screenshots your app with
 > [`Bun.WebView`](https://bun.com/docs/runtime/webview), uploads it to any
-> S3-compatible bucket with `Bun.S3Client`, and hands you the markdown line to
-> paste into a pull request.
+> S3-compatible bucket with `Bun.S3Client`, and hands you the URL (or the
+> markdown line) to paste into a pull request. **Everything runs on your
+> machine** — the only thing that leaves it is the upload to *your* bucket.
+>
+> This very image was captured by cliche, from an HTML file, in one command.
+> [cliche.voila.dev](https://cliche.voila.dev)
 
 ```sh
 bunx @voila.dev/cliche https://localhost:4001/missions mission-list.png --upload --prefix pr-123
@@ -28,11 +34,22 @@ a local MCP server:
 claude mcp add cliche -- bunx @voila.dev/cliche mcp
 ```
 
-## Why
+## Why you want this
 
-Screenshots in pull requests are the cheapest review tool there is — but the
-usual capture path drags in a Playwright install, a 100MB browser download,
-and a place to host the image. `cliche` is a single zero-dependency CLI:
+**1. Front-end PRs you can SEE.** A diff tells the reviewer what changed in
+the code; a before/after tells them what changed *for the user*. When every
+UI pull request ships with its pixels, review gets faster, regressions get
+caught at a glance, and "looks good to me" actually means someone looked.
+
+**2. You're building a photo album by accident.** Content-hashed keys mean
+every shot stays in your bucket forever, dated and browsable. Six months in,
+you own something no git history gives you: what your app *looked like*,
+release by release. Retrospectives, launch recaps, "remember when the
+dashboard looked like this?" — it's all just sitting in S3.
+
+The usual capture path drags in a Playwright install, a 100MB browser
+download, and a place to host the image. `cliche` is a single
+zero-dependency CLI (and MCP server):
 
 - **Capture** — `Bun.WebView`: the system WKWebView on macOS (nothing to
   install), your installed Chrome via CDP on Linux/Windows. Retina-crisp PNGs.

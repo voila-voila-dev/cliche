@@ -2,3 +2,5 @@ node_modules
 dist
 *.tgz
 *.png
+!assets/og.png
+!site/public/og.png

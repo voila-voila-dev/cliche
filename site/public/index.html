@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cliche — un cliché of every page. Just Bun.</title>
+<meta name="description" content="Screenshot any page and get a shareable URL. No Playwright, no browser download, no dependencies — just Bun. CLI and local MCP server.">
+<meta property="og:title" content="cliche — un cliché of every page">
+<meta property="og:description" content="Front-end PRs you can SEE, and a photo album of your app by accident. Zero dependencies, just Bun.">
+<meta property="og:image" content="https://cliche.voila.dev/og.png">
+<meta property="og:url" content="https://cliche.voila.dev">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #faf5ec; color: #1d1a14; line-height: 1.5;
+  }
+  .tricolore { height: 8px; background: linear-gradient(to right, #2563eb 33.3%, #fff 33.3% 66.6%, #ef4444 66.6%); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 24px 80px; }
+  .hero { display: flex; align-items: center; gap: 20px; }
+  .camera { font-size: 64px; transform: rotate(-8deg); filter: drop-shadow(5px 7px 0 rgba(29,26,20,0.12)); }
+  h1 { font-size: clamp(52px, 10vw, 84px); letter-spacing: -3px; font-weight: 800; }
+  h1 .accent { color: #ff6600; }
+  .tagline { font-size: clamp(19px, 3.4vw, 24px); font-weight: 500; color: #4a4438; margin-top: 6px; }
+  .tagline strong { color: #1d1a14; }
+  .ouistiti {
+    display: inline-block; background: #ff6600; color: #fff; font-size: 17px; font-weight: 800;
+    padding: 7px 16px; border-radius: 999px; transform: rotate(-2deg);
+    box-shadow: 4px 4px 0 rgba(29,26,20,0.9); margin-top: 18px;
+  }
+  pre {
+    background: #1d1a14; color: #f5efe2; border-radius: 14px; padding: 18px 22px;
+    font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 15px;
+    overflow-x: auto; margin-top: 28px; line-height: 1.7;
+  }
+  pre .d { color: #ff6600; }
+  pre .c { color: #8d8471; }
+  pre .u { color: #7cc7ff; }
+  h2 { font-size: 30px; letter-spacing: -1px; margin: 56px 0 16px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    background: #fff; border: 3px solid #1d1a14; border-radius: 18px; padding: 22px 24px;
+    box-shadow: 7px 7px 0 rgba(29,26,20,0.9);
+  }
+  .card h3 { font-size: 22px; letter-spacing: -0.5px; }
+  .card p { font-size: 16px; color: #4a4438; margin-top: 8px; }
+  .shot { border: 3px solid #1d1a14; border-radius: 18px; box-shadow: 7px 7px 0 rgba(29,26,20,0.9); width: 100%; display: block; margin-top: 32px; }
+  ul.features { margin: 12px 0 0 20px; color: #4a4438; font-size: 17px; }
+  ul.features li { margin-top: 6px; }
+  ul.features strong { color: #1d1a14; }
+  .footer { margin-top: 72px; padding-top: 24px; border-top: 2px solid rgba(29,26,20,0.12); display: flex; gap: 20px; flex-wrap: wrap; font-size: 16px; color: #4a4438; }
+  a { color: #ff6600; font-weight: 700; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .badge-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+  .badge { background: #1d1a14; color: #f5efe2; border-radius: 999px; padding: 8px 18px; font-size: 15px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="tricolore"></div>
+<div class="wrap">
+  <div class="hero">
+    <div class="camera">📸</div>
+    <div>
+      <h1>cliche<span class="accent">.</span></h1>
+      <div class="tagline"><strong>Un cliché</strong> of every page — no Playwright, no browser download, <strong>just Bun</strong>.</div>
+    </div>
+  </div>
+  <div class="ouistiti">Ouistiti&nbsp;! 🐒</div>
+
+  <pre><span class="c"># screenshot your app, push it to your bucket, get the URL</span>
+<span class="d">$</span> bunx @voila.dev/cliche http://localhost:3000 shot.png --upload
+<span class="u">https://assets.example.com/cliche/2026-08-29-shot-d1cf773c.png</span>
+
+<span class="c"># or hand the tools to your agent — cliche is a local MCP server</span>
+<span class="d">$</span> claude mcp add cliche -- bunx @voila.dev/cliche mcp</pre>
+
+  <div class="badge-row">
+    <div class="badge">0 dependencies</div>
+    <div class="badge">CLI + MCP</div>
+    <div class="badge">any S3 bucket</div>
+    <div class="badge">100% local</div>
+  </div>
+
+  <h2>Why you want this</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>👀 Front-end PRs you can SEE</h3>
+      <p>A diff says what changed in the code; a before/after says what changed
+      <em>for the user</em>. When every UI pull request ships with its pixels,
+      review gets faster and "LGTM" means someone actually looked.</p>
+    </div>
+    <div class="card">
+      <h3>🪣 A photo album, by accident</h3>
+      <p>Content-hashed keys, dated paths: every shot stays in your bucket
+      forever. Six months in, you own what no git history gives you — what your
+      app <em>looked like</em>, release by release. Retrospectives write
+      themselves.</p>
+    </div>
+  </div>
+
+  <img class="shot" src="/og.png" alt="cliche before/after and photo album illustration — itself captured by cliche">
+  <p style="margin-top:10px;color:#8d8471;font-size:14px;text-align:center">This image was captured by cliche, from an HTML file, in one command. Obviously.</p>
+
+  <h2>What's in the box</h2>
+  <ul class="features">
+    <li><strong>Capture</strong> — <code>Bun.WebView</code>: system WKWebView on macOS, your installed Chrome on Linux/Windows. Viewports, <code>--wait-for</code>, <code>--scroll-to</code>, <code>--local-storage</code> to boot authenticated screens.</li>
+    <li><strong>Upload</strong> — <code>Bun.S3Client</code>: R2, AWS S3, MinIO, anything S3-compatible, configured by the standard <code>S3_*</code> env vars you already have.</li>
+    <li><strong>URL out</strong> — bare URLs on stdout by default, <code>--markdown</code> for ready-to-paste <code>![caption](url)</code> lines.</li>
+    <li><strong>MCP in</strong> — <code>cliche mcp</code> serves <code>screenshot</code> and <code>upload</code> to any MCP client over stdio. Hand-rolled JSON-RPC, still zero dependencies.</li>
+    <li><strong>Claude Code skill</strong> — a copyable PR-screenshots skill ships in the package.</li>
+  </ul>
+
+  <div class="footer">
+    <a href="https://github.com/voila-voila-dev/cliche">GitHub</a>
+    <a href="https://www.npmjs.com/package/@voila.dev/cliche">npm</a>
+    <span>MIT · fait avec ❤️ et Bun par <a href="https://voila.dev">voila.dev</a></span>
+  </div>
+</div>
+</body>
+</html>
