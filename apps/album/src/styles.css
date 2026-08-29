@@ -48,6 +48,9 @@ h2.month .n { font-size: 15px; color: #8d8471; font-weight: 700; }
 .polaroid .meta { font-size: 12px; color: #8d8471; padding: 0 4px 2px; }
 .empty { text-align: center; color: #8d8471; font-size: 18px; padding: 80px 0; }
 dialog#lightbox {
+  /* The `* { margin: 0 }` reset kills the UA's `margin: auto` that centers
+     a <dialog>; restore it. */
+  margin: auto;
   border: 3px solid #1d1a14; border-radius: 16px; padding: 12px;
   max-width: min(1200px, 92vw); background: #fff;
   box-shadow: 10px 10px 0 rgba(29,26,20,0.9);
