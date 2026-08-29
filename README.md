@@ -1,0 +1,127 @@
+# cliche 📸
+
+**Take a _cliché_ of any page and get a shareable URL.** No Playwright, no
+browser download, no dependencies — just Bun. Ouistiti !
+
+> _Un cliché_ is French for a snapshot. This one screenshots your app with
+> [`Bun.WebView`](https://bun.com/docs/runtime/webview), uploads it to any
+> S3-compatible bucket with `Bun.S3Client`, and hands you the markdown line to
+> paste into a pull request.
+
+```sh
+bunx @voila.dev/cliche https://localhost:4001/missions mission-list.png --upload --prefix pr-123
+```
+
+```
+Captured https://localhost:4001/missions -> mission-list.png
+Uploaded mission-list.png -> pr-123/2026-08-29-mission-list-d1cf773c.png
+![mission list](https://assets.example.com/pr-123/2026-08-29-mission-list-d1cf773c.png)
+```
+
+That last line goes straight into `gh pr edit --body`. Done.
+
+## Why
+
+Screenshots in pull requests are the cheapest review tool there is — but the
+usual capture path drags in a Playwright install, a 100MB browser download,
+and a place to host the image. `cliche` is a single zero-dependency CLI:
+
+- **Capture** — `Bun.WebView`: the system WKWebView on macOS (nothing to
+  install), your installed Chrome via CDP on Linux/Windows. Retina-crisp PNGs.
+- **Upload** — `Bun.S3Client`: works with Cloudflare R2, AWS S3, MinIO,
+  anything that speaks S3. Keys are content-hashed, so re-uploads never break
+  old links.
+- **Markdown out** — `![caption](url)` per file on stdout, progress on stderr,
+  so you can pipe it wherever the review happens.
+
+Requires Bun ≥ 1.4.0.
+
+## Capture
+
+```sh
+cliche <url> <out.png> [options]
+```
+
+| Option | What it does |
+| --- | --- |
+| `--viewport <WxH>` | Viewport, default `1440x900` (`390x844` for mobile shots). |
+| `--wait-for <css>` | Hold the shot until a selector exists — SPAs render late. |
+| `--scroll-to <css>` | Scroll a component into view before shooting. |
+| `--settle <ms>` | Let fonts/images/animations finish, default `1500`. |
+| `--local-storage k=v` | Seed the target origin's localStorage (repeatable). |
+
+The `--local-storage` flag is the trick for authenticated screens: seed your
+app's session token and the page boots logged in — no login form scripting.
+
+```sh
+cliche http://localhost:4001/admin dashboard.png \
+  --local-storage "myapp.session-token=$TOKEN" \
+  --wait-for '[data-testid=dashboard]'
+```
+
+## Upload
+
+```sh
+cliche upload [--prefix pr-123] *.png     # or add --upload to a capture
+```
+
+Configuration is the standard environment variables `Bun.S3Client` already
+reads — if your shell can talk to your bucket, so can `cliche`:
+
+| Variable | Example |
+| --- | --- |
+| `S3_BUCKET` | `assets-dev` |
+| `S3_ENDPOINT` | `https://<account>.r2.cloudflarestorage.com` (R2) — omit for AWS |
+| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | your keys (`AWS_*` works too) |
+| `CLICHE_PUBLIC_URL` | `https://assets.example.com` — the bucket's public/custom domain |
+
+Objects are keyed `<prefix>/<yyyy-mm-dd>-<name>-<content-hash>.<ext>`: the
+hash makes re-uploads cache-safe, the date keeps the bucket browsable. The
+caption is derived from the file name — name files like you want them read:
+`mission-detail-after.png` → `![mission detail after](…)`.
+
+> [!WARNING]
+> The bucket you point `cliche` at should be one you're happy to have public
+> (PR descriptions live forever). Never capture real user data.
+
+## Programmatic API
+
+```ts
+import { capture, upload } from "@voila.dev/cliche";
+
+await capture({
+  url: "http://localhost:3000",
+  out: "home.png",
+  viewport: { width: 390, height: 844 },
+  waitFor: "main",
+});
+
+const [shot] = await upload({ files: ["home.png"], prefix: "pr-7" });
+console.log(shot.markdown);
+```
+
+## Claude Code skill
+
+`skill/SKILL.md` in this package is a ready-made
+[Claude Code](https://claude.com/claude-code) skill: copy it to
+`.claude/skills/pr-screenshots/` in your repo and Claude captures, uploads,
+and embeds before/after screenshots whenever a PR touches something visible.
+
+```sh
+mkdir -p .claude/skills/pr-screenshots
+cp node_modules/@voila.dev/cliche/skill/SKILL.md .claude/skills/pr-screenshots/
+```
+
+## Platform notes
+
+- **macOS** — WKWebView, zero setup. Shots come out at the display's scale
+  factor (2x on retina).
+- **Linux / Windows** — drives an installed Chrome, Chromium, Edge or Brave
+  over the Chrome DevTools Protocol (GitHub Actions runners ship Chrome, so
+  CI capture works out of the box).
+- `Bun.WebView` is marked experimental by Bun; `cliche` pins none of its
+  sharp edges and will track the API as it settles.
+
+## License
+
+MIT

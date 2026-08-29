@@ -1,0 +1,91 @@
+import { parseArgs } from "node:util";
+import type { CaptureOptions, Viewport } from "./capture.ts";
+
+export interface CaptureCommand {
+  readonly kind: "capture";
+  readonly capture: CaptureOptions;
+  /** Upload the shot right after capturing it. */
+  readonly upload: boolean;
+  readonly prefix: string | undefined;
+}
+
+export interface UploadCommand {
+  readonly kind: "upload";
+  readonly files: ReadonlyArray<string>;
+  readonly prefix: string | undefined;
+}
+
+export interface HelpCommand {
+  readonly kind: "help";
+}
+
+export type Command = CaptureCommand | UploadCommand | HelpCommand;
+
+export function parseViewport(value: string): Viewport {
+  const match = value.match(/^(\d+)x(\d+)$/);
+  if (match === null) {
+    throw new Error(`Invalid --viewport ${value}: expected <width>x<height>, e.g. 1440x900.`);
+  }
+  return { width: Number(match[1]), height: Number(match[2]) };
+}
+
+export function parseLocalStorage(entries: ReadonlyArray<string>): Record<string, string> {
+  const parsed: Record<string, string> = {};
+  for (const entry of entries) {
+    const separator = entry.indexOf("=");
+    if (separator < 1) {
+      throw new Error(`Invalid --local-storage ${entry}: expected key=value.`);
+    }
+    parsed[entry.slice(0, separator)] = entry.slice(separator + 1);
+  }
+  return parsed;
+}
+
+export function parseCommand(argv: ReadonlyArray<string>): Command {
+  const { values, positionals } = parseArgs({
+    args: [...argv],
+    allowPositionals: true,
+    options: {
+      viewport: { type: "string" },
+      "wait-for": { type: "string" },
+      "scroll-to": { type: "string" },
+      settle: { type: "string" },
+      "local-storage": { type: "string", multiple: true },
+      upload: { type: "boolean" },
+      prefix: { type: "string" },
+      help: { type: "boolean", short: "h" },
+    },
+  });
+  if (values.help === true || positionals.length === 0) {
+    return { kind: "help" };
+  }
+  if (positionals[0] === "upload") {
+    const files = positionals.slice(1);
+    if (files.length === 0) throw new Error("upload: pass at least one image file.");
+    return { kind: "upload", files, prefix: values.prefix };
+  }
+  const [url, out] = positionals;
+  if (url === undefined || out === undefined) {
+    throw new Error("capture: pass <url> <out.png> (or see --help).");
+  }
+  const settle = values.settle === undefined ? undefined : Number(values.settle);
+  if (settle !== undefined && !Number.isFinite(settle)) {
+    throw new Error(`Invalid --settle ${values.settle}: expected milliseconds.`);
+  }
+  return {
+    kind: "capture",
+    capture: {
+      url,
+      out,
+      ...(values.viewport === undefined ? {} : { viewport: parseViewport(values.viewport) }),
+      ...(values["wait-for"] === undefined ? {} : { waitFor: values["wait-for"] }),
+      ...(values["scroll-to"] === undefined ? {} : { scrollTo: values["scroll-to"] }),
+      ...(settle === undefined ? {} : { settleMilliseconds: settle }),
+      ...(values["local-storage"] === undefined
+        ? {}
+        : { localStorage: parseLocalStorage(values["local-storage"]) }),
+    },
+    upload: values.upload === true,
+    prefix: values.prefix,
+  };
+}

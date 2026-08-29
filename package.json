@@ -1,0 +1,56 @@
+{
+  "name": "@voila.dev/cliche",
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "bun@1.4.0",
+  "license": "MIT",
+  "description": "Take a cliché of any page and get a shareable URL — screenshots with Bun.WebView, uploads with Bun.S3Client, zero dependencies.",
+  "homepage": "https://github.com/voila-voila-dev/cliche",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voila-voila-dev/cliche.git"
+  },
+  "bugs": {
+    "url": "https://github.com/voila-voila-dev/cliche/issues"
+  },
+  "keywords": [
+    "screenshot",
+    "bun",
+    "webview",
+    "s3",
+    "r2",
+    "pull-request",
+    "cli"
+  ],
+  "sideEffects": [],
+  "bin": {
+    "cliche": "./dist/cli.js"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "skill",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "bun": ">=1.4.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check": "tsc -p tsconfig.json",
+    "test": "bun test",
+    "ci": "bun run check && bun run build && bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.0",
+    "typescript": "^5.9.3"
+  }
+}
