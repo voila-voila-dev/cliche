@@ -7,19 +7,26 @@ export interface CaptureCommand {
   /** Upload the shot right after capturing it. */
   readonly upload: boolean;
   readonly prefix: string | undefined;
+  /** Print `![caption](url)` lines instead of the bare URLs. */
+  readonly markdown: boolean;
 }
 
 export interface UploadCommand {
   readonly kind: "upload";
   readonly files: ReadonlyArray<string>;
   readonly prefix: string | undefined;
+  readonly markdown: boolean;
+}
+
+export interface McpCommand {
+  readonly kind: "mcp";
 }
 
 export interface HelpCommand {
   readonly kind: "help";
 }
 
-export type Command = CaptureCommand | UploadCommand | HelpCommand;
+export type Command = CaptureCommand | UploadCommand | McpCommand | HelpCommand;
 
 export function parseViewport(value: string): Viewport {
   const match = value.match(/^(\d+)x(\d+)$/);
@@ -53,16 +60,20 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
       "local-storage": { type: "string", multiple: true },
       upload: { type: "boolean" },
       prefix: { type: "string" },
+      markdown: { type: "boolean" },
       help: { type: "boolean", short: "h" },
     },
   });
   if (values.help === true || positionals.length === 0) {
     return { kind: "help" };
   }
+  if (positionals[0] === "mcp") {
+    return { kind: "mcp" };
+  }
   if (positionals[0] === "upload") {
     const files = positionals.slice(1);
     if (files.length === 0) throw new Error("upload: pass at least one image file.");
-    return { kind: "upload", files, prefix: values.prefix };
+    return { kind: "upload", files, prefix: values.prefix, markdown: values.markdown === true };
   }
   const [url, out] = positionals;
   if (url === undefined || out === undefined) {
@@ -87,5 +98,6 @@ export function parseCommand(argv: ReadonlyArray<string>): Command {
     },
     upload: values.upload === true,
     prefix: values.prefix,
+    markdown: values.markdown === true,
   };
 }

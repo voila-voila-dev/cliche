@@ -39,10 +39,11 @@ bunx @voila.dev/cliche http://localhost:3000/changed-screen \
 ## 2. Upload
 
 ```sh
-bunx @voila.dev/cliche upload --prefix pr-<number> qa-screenshots/*.png
+bunx @voila.dev/cliche upload --prefix pr-<number> --markdown qa-screenshots/*.png
 ```
 
-Prints one `![caption](url)` line per file on stdout. Bucket configuration
+Prints one `![caption](url)` line per file on stdout (without `--markdown`,
+bare URLs). Bucket configuration
 comes from the standard `S3_*` environment variables plus
 `CLICHE_PUBLIC_URL` (see the package README).
 

@@ -15,10 +15,18 @@ bunx @voila.dev/cliche https://localhost:4001/missions mission-list.png --upload
 ```
 Captured https://localhost:4001/missions -> mission-list.png
 Uploaded mission-list.png -> pr-123/2026-08-29-mission-list-d1cf773c.png
-![mission list](https://assets.example.com/pr-123/2026-08-29-mission-list-d1cf773c.png)
+https://assets.example.com/pr-123/2026-08-29-mission-list-d1cf773c.png
 ```
 
-That last line goes straight into `gh pr edit --body`. Done.
+The URL is yours to paste anywhere; add `--markdown` to get a ready-made
+`![mission list](…)` line for `gh pr edit --body` instead.
+
+Or skip the CLI entirely and give the tools to your agent — `cliche` is also
+a local MCP server:
+
+```sh
+claude mcp add cliche -- bunx @voila.dev/cliche mcp
+```
 
 ## Why
 
@@ -31,8 +39,12 @@ and a place to host the image. `cliche` is a single zero-dependency CLI:
 - **Upload** — `Bun.S3Client`: works with Cloudflare R2, AWS S3, MinIO,
   anything that speaks S3. Keys are content-hashed, so re-uploads never break
   old links.
-- **Markdown out** — `![caption](url)` per file on stdout, progress on stderr,
-  so you can pipe it wherever the review happens.
+- **URL out** — one public URL per file on stdout (progress on stderr), or
+  `--markdown` for `![caption](url)` lines, so you can pipe it wherever the
+  review happens.
+- **MCP in** — `cliche mcp` serves the same two tools (`screenshot`, `upload`)
+  over stdio to any MCP client, hand-rolled JSON-RPC, still zero dependencies.
+  Everything runs locally.
 
 Requires Bun ≥ 1.4.0.
 
@@ -62,7 +74,7 @@ cliche http://localhost:4001/admin dashboard.png \
 ## Upload
 
 ```sh
-cliche upload [--prefix pr-123] *.png     # or add --upload to a capture
+cliche upload [--prefix pr-123] [--markdown] *.png   # or add --upload to a capture
 ```
 
 Configuration is the standard environment variables `Bun.S3Client` already
@@ -83,6 +95,36 @@ caption is derived from the file name — name files like you want them read:
 > [!WARNING]
 > The bucket you point `cliche` at should be one you're happy to have public
 > (PR descriptions live forever). Never capture real user data.
+
+## MCP server
+
+```sh
+cliche mcp        # stdio; nothing leaves your machine except the S3 upload
+```
+
+Registers two tools with any MCP client:
+
+- **`screenshot`** — `url` (required), `out`, `viewport` (`"390x844"`),
+  `wait_for`, `scroll_to`, `settle_ms`, `local_storage` (object), `upload`,
+  `prefix`, `markdown`. Without `out` the shot lands in a temp file; with
+  `upload: true` the result is the public URL.
+- **`upload`** — `files` (required), `prefix`, `markdown`.
+
+One-liners:
+
+```sh
+claude mcp add cliche -- bunx @voila.dev/cliche mcp    # Claude Code
+```
+
+or in a project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "cliche": { "command": "bunx", "args": ["@voila.dev/cliche", "mcp"] }
+  }
+}
+```
 
 ## Programmatic API
 

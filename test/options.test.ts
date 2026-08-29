@@ -57,6 +57,7 @@ describe("parseCommand", () => {
       },
       upload: true,
       prefix: "pr-42",
+      markdown: false,
     });
   });
 
@@ -65,11 +66,16 @@ describe("parseCommand", () => {
   });
 
   test("upload subcommand collects files", () => {
-    expect(parseCommand(["upload", "--prefix", "pr-7", "a.png", "b.png"])).toEqual({
+    expect(parseCommand(["upload", "--prefix", "pr-7", "--markdown", "a.png", "b.png"])).toEqual({
       kind: "upload",
       files: ["a.png", "b.png"],
       prefix: "pr-7",
+      markdown: true,
     });
+  });
+
+  test("mcp subcommand", () => {
+    expect(parseCommand(["mcp"])).toEqual({ kind: "mcp" });
   });
 
   test("upload requires files", () => {
