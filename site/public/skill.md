@@ -14,8 +14,8 @@ with `cliche`, upload them, and embed the markdown in the PR body.
   copy with visual impact. Skip for pure logic/backend/refactor PRs where
   pixels are provably identical.
 - Capture **after** shots always. Add **before** shots (production or a
-  deployed preview) only when the change modifies an existing screen —
-  before/after is what makes redesigns reviewable.
+  deployed preview) only when the change modifies an existing screen: the
+  pair is what makes a redesign reviewable.
 
 ## 1. Capture
 
@@ -31,7 +31,7 @@ bunx @voila.dev/cliche http://localhost:3000/changed-screen \
   screens; `--scroll-to <css>` reaches below-the-fold components;
   `--viewport 390x844` for responsive changes (default is 1440x900);
   `--full-page` when the whole screen changed.
-- Use demo/seed data only — never real user data, the bucket is public.
+- Use demo/seed data only. Never real user data: the bucket is public.
 - Name files as captions: `mission-detail-after.png` reads as
   "mission detail after".
 - Keep it curated: at most ~8 images per PR, one per meaningfully distinct

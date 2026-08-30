@@ -1,6 +1,6 @@
 # cliche
 
-> Take a "cliché" (French for snapshot) of any web page and get a shareable URL. A zero-dependency Bun CLI and local MCP server: screenshots via Bun.WebView (system WKWebView on macOS, installed Chrome via CDP on Linux/Windows), uploads via Bun.S3Client to any S3-compatible bucket (Cloudflare R2, AWS S3, MinIO). Built for pull-request screenshots: front-end PRs reviewed with their pixels, and an S3 bucket that becomes your app's visual history over time.
+> Screenshot any web page and get a shareable URL. A zero-dependency Bun CLI and local MCP server: screenshots via Bun.WebView (system WKWebView on macOS, installed Chrome via CDP on Linux/Windows), uploads via Bun.S3Client to any S3-compatible bucket (Cloudflare R2, AWS S3, MinIO). Built for pull-request screenshots, so PRs are reviewed with their pixels and the bucket becomes the app's visual history.
 
 Install: `bunx @voila.dev/cliche <url> <out.png> [--upload]` (requires Bun >= 1.4.0).
 MCP server: `claude mcp add cliche -- bunx @voila.dev/cliche mcp` (tools: `screenshot`, `upload`).

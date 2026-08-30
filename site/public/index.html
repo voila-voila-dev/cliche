@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>cliche — un cliché of every page. Just Bun.</title>
-<meta name="description" content="Screenshot any page and get a shareable URL. No Playwright, no browser download, no dependencies — just Bun. CLI and local MCP server.">
-<meta property="og:title" content="cliche — un cliché of every page">
-<meta property="og:description" content="Front-end PRs you can SEE, and a photo album of your app by accident. Zero dependencies, just Bun.">
+<title>cliche: screenshot any page, get a URL. Just Bun.</title>
+<meta name="description" content="Screenshot any page and get a shareable URL. No Playwright, no browser download, no dependencies. A Bun CLI and a local MCP server.">
+<meta property="og:title" content="cliche">
+<meta property="og:description" content="Screenshot any page, get a URL. Zero dependencies, just Bun.">
 <meta property="og:image" content="https://cliche.voila.dev/og.png">
 <meta property="og:url" content="https://cliche.voila.dev">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="cliche">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="cliche — un cliché of every page">
-<meta name="twitter:description" content="Front-end PRs you can SEE, and a photo album of your app by accident. Zero dependencies, just Bun.">
+<meta name="twitter:title" content="cliche">
+<meta name="twitter:description" content="Screenshot any page, get a URL. Zero dependencies, just Bun.">
 <meta name="twitter:image" content="https://cliche.voila.dev/og.png">
 <meta name="keywords" content="screenshot CLI, Bun, Bun.WebView, S3, Cloudflare R2, pull request screenshots, MCP server, zero dependencies, Playwright alternative">
 <meta name="theme-color" content="#faf5ec">
@@ -70,10 +70,12 @@
   .card h3 { font-size: 22px; letter-spacing: -0.5px; }
   .card p { font-size: 16px; color: #4a4438; margin-top: 8px; }
   .shot { border: 3px solid #1d1a14; border-radius: 18px; box-shadow: 7px 7px 0 rgba(29,26,20,0.9); width: 100%; display: block; margin-top: 32px; }
+  .caption { margin-top: 10px; color: #8d8471; font-size: 14px; text-align: center; }
   .pipeline { display: flex; align-items: stretch; gap: 14px; margin-top: 24px; }
   @media (max-width: 760px) { .pipeline { flex-direction: column; } .pipe-arrow { transform: rotate(90deg); align-self: center; } }
   .step {
-    flex: 1; background: #fff; border: 3px solid #1d1a14; border-radius: 18px;
+    /* min-width:0 so a flex item can shrink below its nowrap code line. */
+    flex: 1; min-width: 0; background: #fff; border: 3px solid #1d1a14; border-radius: 18px;
     padding: 20px 22px; box-shadow: 7px 7px 0 rgba(29,26,20,0.9);
     display: flex; flex-direction: column; gap: 8px;
   }
@@ -83,7 +85,7 @@
   .step-code {
     font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 13px;
     background: #1d1a14; color: #f5efe2; border-radius: 9px; padding: 8px 12px;
-    white-space: nowrap; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word; line-height: 1.5;
   }
   .pipe-arrow { align-self: center; font-size: 30px; font-weight: 800; color: #ff6600; }
   ul.features { margin: 12px 0 0 20px; color: #4a4438; font-size: 17px; }
@@ -102,16 +104,16 @@
     <div class="camera">📸</div>
     <div>
       <h1>cliche<span class="accent">.</span></h1>
-      <div class="tagline"><strong>Un cliché</strong> of every page — no Playwright, no browser download, <strong>just Bun</strong>.</div>
+      <div class="tagline">Screenshot any page. Get a URL. <strong>Just Bun.</strong></div>
     </div>
   </div>
   <div class="ouistiti">Ouistiti&nbsp;! 🐒</div>
 
-  <pre><span class="c"># screenshot your app, push it to your bucket, get the URL</span>
+  <pre><span class="c"># shoot a page, push it to your bucket, get the URL</span>
 <span class="d">$</span> bunx @voila.dev/cliche http://localhost:3000 shot.png --upload
 <span class="u">https://assets.example.com/cliche/2026-08-29-shot-d1cf773c.png</span>
 
-<span class="c"># or hand the tools to your agent — cliche is a local MCP server</span>
+<span class="c"># same tools, for your agent</span>
 <span class="d">$</span> claude mcp add cliche -- bunx @voila.dev/cliche mcp</pre>
 
   <div class="badge-row">
@@ -121,20 +123,17 @@
     <div class="badge">100% local</div>
   </div>
 
-  <h2>Why you want this</h2>
+  <h2>Why</h2>
   <div class="cards">
     <div class="card">
-      <h3>👀 Front-end PRs you can SEE</h3>
-      <p>A diff says what changed in the code; a before/after says what changed
-      <em>for the user</em>. When every UI pull request ships with its pixels,
-      review gets faster and "LGTM" means someone actually looked.</p>
+      <h3>👀 Front-end PRs you can see</h3>
+      <p>A diff shows the code. A screenshot shows what the user gets. Put both
+      in the PR and review stops being guesswork.</p>
     </div>
     <div class="card">
       <h3>🪣 A photo album, by accident</h3>
-      <p>Content-hashed keys, dated paths: every shot stays in your bucket
-      forever. Six months in, you own what no git history gives you — what your
-      app <em>looked like</em>, release by release. Retrospectives write
-      themselves.</p>
+      <p>Keys are content-hashed and dated, so nothing overwrites anything. Your
+      bucket ends up holding what your app looked like, release by release.</p>
     </div>
   </div>
 
@@ -143,44 +142,41 @@
     <div class="step">
       <div class="step-emoji">📸</div>
       <h3>1. Capture</h3>
-      <p><code>Bun.WebView</code> renders the page — system WKWebView on macOS,
-      your Chrome elsewhere. Nothing to install, retina PNGs out.</p>
+      <p><code>Bun.WebView</code> renders the page. WKWebView on macOS, your
+      Chrome elsewhere. Nothing to install.</p>
       <div class="step-code">cliche localhost:3000 shot.png</div>
     </div>
     <div class="pipe-arrow">→</div>
     <div class="step">
       <div class="step-emoji">🪣</div>
       <h3>2. Upload</h3>
-      <p><code>Bun.S3Client</code> pushes it to <em>your</em> bucket — R2, S3,
-      MinIO — under a content-hashed, dated key that never breaks.</p>
+      <p><code>Bun.S3Client</code> pushes it to your bucket. R2, S3, MinIO,
+      anything that speaks S3.</p>
       <div class="step-code">--upload --prefix pr-123</div>
     </div>
     <div class="pipe-arrow">→</div>
     <div class="step">
       <div class="step-emoji">🔗</div>
       <h3>3. Paste</h3>
-      <p>The public URL lands on stdout (<code>--markdown</code> for a
-      ready-made image line). Straight into the PR body.</p>
+      <p>The URL lands on stdout. Add <code>--markdown</code> for an image line
+      you can paste as is.</p>
       <div class="step-code">gh pr edit 123 --body "…"</div>
     </div>
   </div>
 
   <h2>The album 📔</h2>
-  <p style="color:#4a4438;font-size:17px"><code>bunx @voila.dev/cliche album</code> opens your bucket as a browsable
-  photo album — every cliché, month by month, polaroid-style. Here it is
-  running on <a href="https://tries.care">tries.care</a>'s real PR-screenshots bucket:</p>
-  <img class="shot" src="/album.png" alt="album — real tries.care pages captured by cliche, grouped by month as polaroids" loading="lazy">
-  <p style="margin-top:10px;color:#8d8471;font-size:14px;text-align:center">Yes, this screenshot of the album of screenshots was also taken by cliche. It's clichés all the way down.</p>
+  <p style="color:#4a4438;font-size:17px">One command opens your bucket as a photo album, month by month.
+  Here it runs on <a href="https://tries.care">tries.care</a>'s screenshots:</p>
+  <img class="shot" src="/album.png" alt="album: real tries.care pages captured by cliche, grouped by month as polaroids" loading="lazy">
+  <p class="caption">Shot with cliche, obviously.</p>
 
   <h2>What's in the box</h2>
   <ul class="features">
-    <li><strong>Capture</strong> — <code>Bun.WebView</code>: system WKWebView on macOS, your installed Chrome on Linux/Windows. Viewports, <code>--full-page</code> for the whole page in one shot, <code>--wait-for</code>, <code>--scroll-to</code>, <code>--local-storage</code> to boot authenticated screens.</li>
-    <li><strong>Upload</strong> — <code>Bun.S3Client</code>: R2, AWS S3, MinIO, anything S3-compatible, configured by the standard <code>S3_*</code> env vars you already have.</li>
-    <li><strong>URL out</strong> — bare URLs on stdout by default, <code>--markdown</code> for ready-to-paste <code>![caption](url)</code> lines.</li>
-    <li><strong>MCP in</strong> — <code>cliche mcp</code> serves <code>screenshot</code> and <code>upload</code> to any MCP client over stdio. Hand-rolled JSON-RPC, still zero dependencies.</li>
-    <li><strong>One-command R2 setup</strong> — <code>cliche setup</code> creates the bucket and its public URL through your <code>wrangler login</code>, and writes the config to <code>.env</code>.</li>
-    <li><strong>Claude Code skill</strong> — <code>bunx @voila.dev/cliche skill</code> installs the PR-screenshots skill into <code>.claude/skills/</code>. Also served at <a href="/skill.md">/skill.md</a>.</li>
-    <li><strong>The album</strong> — <code>bunx @voila.dev/cliche album</code> opens the bucket as a browsable photo album of your app, month by month.</li>
+    <li><strong>Capture</strong>: viewports, <code>--full-page</code>, <code>--wait-for</code>, <code>--scroll-to</code>, and <code>--local-storage</code> to boot logged-in screens.</li>
+    <li><strong>Upload</strong>: the standard <code>S3_*</code> variables you already have, plus <code>CLICHE_PUBLIC_URL</code> for a custom domain.</li>
+    <li><strong>MCP</strong>: <code>cliche mcp</code> serves <code>screenshot</code> and <code>upload</code> to any client over stdio.</li>
+    <li><strong>R2 in one command</strong>: <code>cliche setup</code> creates the bucket through your wrangler login and writes <code>.env</code>.</li>
+    <li><strong>Claude Code skill</strong>: <code>cliche skill</code> drops a PR-screenshots skill into <code>.claude/skills/</code>. Also at <a href="/skill.md">/skill.md</a>.</li>
   </ul>
 
   <div class="footer">
