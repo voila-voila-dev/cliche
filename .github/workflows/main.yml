@@ -1,9 +1,9 @@
 name: Main
 
 # Everything that happens when `main` moves: the checks run, then Changesets
-# publishes any version that is not on npm yet and cuts the matching GitHub
-# release. Versioning happens locally (`bun run version-packages`), so the
-# action never needs permission to open a pull request.
+# opens the "Version packages" pull request from the pending changesets. Once
+# that PR is merged, the same job publishes to npm and cuts the GitHub
+# release from the changelog.
 
 on:
   push:
@@ -15,8 +15,10 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  # The action tags the commit and creates the release.
+  # The action pushes the version branch, tags the commit and creates the
+  # release.
   contents: write
+  pull-requests: write
   # Required for npm Trusted Publishing (OIDC).
   id-token: write
 
@@ -57,6 +59,9 @@ jobs:
 
       - uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
+          version-script: bun run version-packages
           publish-script: bun run release
+          commit-message: "Version packages"
+          pr-title: "Version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
