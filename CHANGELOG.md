@@ -1,5 +1,11 @@
 # @voila.dev/cliche
 
+## 0.2.1
+
+### Patch Changes
+
+- [`bd83699`](https://github.com/voila-voila-dev/cliche/commit/bd8369906341b0ce8973ed9d874bb94363a6e322) Thanks [@emilienbidet](https://github.com/emilienbidet)! - Point the README images at absolute URLs so they render on npm too.
+
 ## 0.2.0
 
 ### Minor Changes
