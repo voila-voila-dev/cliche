@@ -173,7 +173,7 @@
   <h2>What's in the box</h2>
   <ul class="features">
     <li><strong>Capture</strong>: viewports, <code>--full-page</code>, <code>--wait-for</code>, <code>--scroll-to</code>, and <code>--local-storage</code> to boot logged-in screens.</li>
-    <li><strong>Upload</strong>: the standard <code>S3_*</code> variables you already have, plus <code>CLICHE_PUBLIC_URL</code> for a custom domain.</li>
+    <li><strong>Upload</strong>: <code>CLICHE_BUCKET</code>, <code>CLICHE_ENDPOINT</code> and the two keys. Everything is prefixed, so it never collides with variables you already have.</li>
     <li><strong>MCP</strong>: <code>cliche mcp</code> serves <code>screenshot</code> and <code>upload</code> to any client over stdio.</li>
     <li><strong>R2 in one command</strong>: <code>cliche setup</code> creates the bucket through your wrangler login and writes <code>.env</code>.</li>
     <li><strong>Claude Code skill</strong>: <code>cliche skill</code> drops a PR-screenshots skill into <code>.claude/skills/</code>. Also at <a href="/skill.md">/skill.md</a>.</li>

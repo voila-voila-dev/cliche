@@ -6,7 +6,7 @@ Install: `bunx @voila.dev/cliche <url> <out.png> [--upload]` (requires Bun >= 1.
 MCP server: `claude mcp add cliche -- bunx @voila.dev/cliche mcp` (tools: `screenshot`, `upload`).
 R2 setup: `bunx @voila.dev/cliche setup` (creates the bucket and public URL via wrangler, writes .env).
 Claude Code skill: `bunx @voila.dev/cliche skill` (installs .claude/skills/pr-screenshots/SKILL.md), or fetch https://cliche.voila.dev/skill.md.
-Upload configuration: standard S3_BUCKET / S3_ENDPOINT / S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY environment variables, plus CLICHE_PUBLIC_URL for the bucket's public domain. Output is one public URL per file on stdout; `--markdown` yields `![caption](url)` lines.
+Upload configuration: CLICHE_BUCKET, CLICHE_ENDPOINT, CLICHE_ACCESS_KEY_ID, CLICHE_SECRET_ACCESS_KEY, CLICHE_REGION, and CLICHE_PUBLIC_URL for the bucket's public domain. Every variable is prefixed so it never collides with the S3_/AWS_ variables a shell may already carry. Output is one public URL per file on stdout; `--markdown` yields `![caption](url)` lines.
 
 ## Docs
 

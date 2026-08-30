@@ -43,15 +43,15 @@ function environmentBlock(
 ): string {
   const lines = [
     "",
-    "# cliche — added by `cliche setup` (https://cliche.voila.dev)",
-    `S3_BUCKET=${bucket}`,
+    "# cliche, added by `cliche setup` (https://cliche.voila.dev)",
+    `CLICHE_BUCKET=${bucket}`,
     accountId === null
-      ? "# S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com"
-      : `S3_ENDPOINT=https://${accountId}.r2.cloudflarestorage.com`,
+      ? "# CLICHE_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com"
+      : `CLICHE_ENDPOINT=https://${accountId}.r2.cloudflarestorage.com`,
     ...(publicUrl === null ? [] : [`CLICHE_PUBLIC_URL=${publicUrl}`]),
     `# Mint the two keys at ${DASHBOARD_TOKENS_URL} (Object Read & Write on ${bucket}):`,
-    "# S3_ACCESS_KEY_ID=",
-    "# S3_SECRET_ACCESS_KEY=",
+    "# CLICHE_ACCESS_KEY_ID=",
+    "# CLICHE_SECRET_ACCESS_KEY=",
     "",
   ];
   return lines.join("\n");
@@ -85,8 +85,8 @@ export async function setup(bucket: string): Promise<void> {
 
   const environmentFile = Bun.file(".env");
   const existing = (await environmentFile.exists()) ? await environmentFile.text() : "";
-  if (existing.includes("S3_BUCKET=")) {
-    console.error(".env already has an S3_BUCKET — printing the block instead of appending:");
+  if (existing.includes("CLICHE_BUCKET=")) {
+    console.error(".env already has a CLICHE_BUCKET. Printing the block instead of appending:");
     console.log(environmentBlock(bucket, publicUrl, accountId));
   } else {
     await Bun.write(".env", existing + environmentBlock(bucket, publicUrl, accountId));
@@ -97,7 +97,7 @@ export async function setup(bucket: string): Promise<void> {
 Almost there — one last step wrangler cannot do:
   1. Open ${DASHBOARD_TOKENS_URL}
   2. Create an API token with "Object Read & Write" on "${bucket}"
-  3. Put the two values in .env as S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY
+  3. Put the two values in .env as CLICHE_ACCESS_KEY_ID / CLICHE_SECRET_ACCESS_KEY
 
 Then take your first cliché:
   bunx @voila.dev/cliche https://example.com shot.png --upload`);

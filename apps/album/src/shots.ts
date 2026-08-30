@@ -1,4 +1,4 @@
-import { publicBaseUrl } from "../../../src/upload.ts";
+import { createClient, publicBaseUrl } from "../../../src/upload.ts";
 
 export interface Shot {
   readonly key: string;
@@ -15,7 +15,7 @@ function dateOf(key: string, lastModified: string | undefined): string {
 }
 
 async function listBucket(baseUrl: string): Promise<Array<Shot>> {
-  const client = new Bun.S3Client();
+  const client = createClient();
   const shots: Array<Shot> = [];
   let continuationToken: string | undefined;
   do {
@@ -78,7 +78,7 @@ export async function listShots(): Promise<{ demo: boolean; shots: Array<Shot> }
     return { demo: false, shots: await listBucket(baseUrl) };
   } catch (error) {
     console.error(
-      `No bucket configured (${error instanceof Error ? error.message.split(":")[0] : error}) — serving the demo album. Run \`bunx @voila.dev/cliche setup\` to plug a real one.`,
+      `No bucket configured (${error instanceof Error ? error.message.split(":")[0] : error}). Serving the demo album; run \`bunx @voila.dev/cliche setup\` to plug a real one.`,
     );
     return { demo: true, shots: demoShots() };
   }

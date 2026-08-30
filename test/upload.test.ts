@@ -4,7 +4,7 @@ import { upload } from "../src/upload.ts";
 const ORIGINAL_ENV = { ...process.env };
 
 afterEach(() => {
-  for (const key of ["CLICHE_PUBLIC_URL", "S3_BUCKET", "S3_ENDPOINT", "AWS_REGION"]) {
+  for (const key of ["CLICHE_PUBLIC_URL", "CLICHE_BUCKET", "CLICHE_ENDPOINT", "CLICHE_REGION"]) {
     if (ORIGINAL_ENV[key] === undefined) delete process.env[key];
     else process.env[key] = ORIGINAL_ENV[key];
   }
@@ -35,10 +35,10 @@ describe("upload", () => {
     });
   });
 
-  test("builds the public URL from the S3 endpoint when not overridden", async () => {
+  test("builds the public URL from the endpoint when not overridden", async () => {
     delete process.env.CLICHE_PUBLIC_URL;
-    process.env.S3_BUCKET = "shots";
-    process.env.S3_ENDPOINT = "https://accountid.r2.cloudflarestorage.com";
+    process.env.CLICHE_BUCKET = "shots";
+    process.env.CLICHE_ENDPOINT = "https://accountid.r2.cloudflarestorage.com";
     await withTemporaryPng(async (file) => {
       const [uploaded] = await upload({ files: [file] }, { write: async () => {} });
       expect(uploaded?.url).toStartWith("https://accountid.r2.cloudflarestorage.com/shots/cliche/");
@@ -47,10 +47,23 @@ describe("upload", () => {
 
   test("fails with a helpful message when nothing is configured", async () => {
     delete process.env.CLICHE_PUBLIC_URL;
-    delete process.env.S3_BUCKET;
+    delete process.env.CLICHE_BUCKET;
     expect(upload({ files: ["a.png"] }, { write: async () => {} })).rejects.toThrow(
-      "No bucket configured",
+      "set CLICHE_BUCKET",
     );
+  });
+
+  test("ignores an ambient S3_BUCKET meant for something else", async () => {
+    delete process.env.CLICHE_PUBLIC_URL;
+    delete process.env.CLICHE_BUCKET;
+    process.env.S3_BUCKET = "someone-elses-bucket";
+    try {
+      expect(upload({ files: ["a.png"] }, { write: async () => {} })).rejects.toThrow(
+        "set CLICHE_BUCKET",
+      );
+    } finally {
+      delete process.env.S3_BUCKET;
+    }
   });
 
   test("skips unsupported extensions", async () => {

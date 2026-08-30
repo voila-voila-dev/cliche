@@ -44,9 +44,8 @@ bunx @voila.dev/cliche upload --prefix pr-<number> --markdown qa-screenshots/*.p
 ```
 
 Prints one `![caption](url)` line per file on stdout (without `--markdown`,
-bare URLs). Bucket configuration
-comes from the standard `S3_*` environment variables plus
-`CLICHE_PUBLIC_URL` (see the package README).
+bare URLs). Bucket configuration comes from the `CLICHE_*` environment
+variables (see the package README).
 
 ## 3. Embed in the PR
 

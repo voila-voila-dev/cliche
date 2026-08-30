@@ -32,8 +32,12 @@ Upload options:
   --prefix <name>             Object key prefix, e.g. pr-123.
   --markdown                  Print ![caption](url) lines instead of URLs.
 
-Upload configuration (standard Bun.S3Client environment variables):
-  S3_BUCKET, S3_ENDPOINT, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY (or AWS_*)
+Upload configuration (environment, all prefixed so nothing else collides):
+  CLICHE_BUCKET               Bucket name.
+  CLICHE_ENDPOINT             S3 endpoint (omit on AWS).
+  CLICHE_ACCESS_KEY_ID        Access key.
+  CLICHE_SECRET_ACCESS_KEY    Secret key.
+  CLICHE_REGION               Region (defaults to us-east-1 on AWS).
   CLICHE_PUBLIC_URL           Public base URL of the bucket (custom domain).
 
 URLs go to stdout, progress to stderr. Ouistiti !`;
