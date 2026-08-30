@@ -1,4 +1,4 @@
-<img src="assets/og.png" alt="cliche: screenshot any page, get a URL. Just Bun." width="100%">
+<img src="https://raw.githubusercontent.com/voila-voila-dev/cliche/main/assets/og.png" alt="cliche: screenshot any page, get a URL. Just Bun." width="100%">
 
 # cliche 📸
 
@@ -127,7 +127,7 @@ Opens your bucket as a photo album: every cliché, grouped by month, with a
 filter and a lightbox. A small Bun app that ships in the package; source in
 `apps/album`.
 
-<img src="assets/album-preview.png" alt="album: real tries.care pages captured by cliche, grouped by month" width="100%">
+<img src="https://raw.githubusercontent.com/voila-voila-dev/cliche/main/assets/album-preview.png" alt="album: real tries.care pages captured by cliche, grouped by month" width="100%">
 
 Running on [tries.care](https://tries.care)'s screenshots bucket.
 

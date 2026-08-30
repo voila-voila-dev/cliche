@@ -1,7 +1,10 @@
 node_modules
 dist
 *.tgz
+
+# Screenshots are throwaway, except the two the README and the site show.
 *.png
 !assets/og.png
+!assets/album-preview.png
 !site/public/og.png
 !site/public/album.png
