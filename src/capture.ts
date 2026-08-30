@@ -46,8 +46,21 @@ async function waitForSelector(view: Bun.WebView, selector: string): Promise<voi
   }
 }
 
+/**
+ * Bun.WebView landed in Bun 1.4. Without this check an older runtime fails
+ * with "undefined is not a constructor", which says nothing useful.
+ */
+export function assertWebViewAvailable(webView: unknown, version: string): void {
+  if (typeof webView !== "function") {
+    throw new Error(
+      `cliche needs Bun 1.4.0 or newer for Bun.WebView, and this is Bun ${version}. Run \`bun upgrade\`, then try again.`,
+    );
+  }
+}
+
 /** Screenshot a page with Bun.WebView and write it to `options.out` as PNG. */
 export async function capture(options: CaptureOptions): Promise<void> {
+  assertWebViewAvailable((Bun as { WebView?: unknown }).WebView, Bun.version);
   const viewport = options.viewport ?? { width: 1440, height: 900 };
   await using view = new Bun.WebView(viewport);
   const localStorageEntries = Object.entries(options.localStorage ?? {});

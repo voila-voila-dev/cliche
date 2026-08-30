@@ -1,7 +1,19 @@
 import { describe, expect, test } from "bun:test";
-import { capture } from "../src/capture.ts";
+import { assertWebViewAvailable, capture } from "../src/capture.ts";
 
 const PNG_MAGIC = [137, 80, 78, 71];
+
+describe("assertWebViewAvailable", () => {
+  test("an older Bun gets a message naming both versions", () => {
+    expect(() => assertWebViewAvailable(undefined, "1.2.23")).toThrow(
+      "cliche needs Bun 1.4.0 or newer for Bun.WebView, and this is Bun 1.2.23.",
+    );
+  });
+
+  test("a runtime that has it passes", () => {
+    expect(() => assertWebViewAvailable(() => {}, "1.4.0")).not.toThrow();
+  });
+});
 
 describe("capture", () => {
   test(
