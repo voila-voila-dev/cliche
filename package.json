@@ -1,6 +1,6 @@
 {
   "name": "@voila.dev/cliche",
-  "version": "0.0.0",
+  "version": "0.1.12",
   "type": "module",
   "packageManager": "bun@1.4.0",
   "license": "MIT",
@@ -48,9 +48,14 @@
     "build": "tsc -p tsconfig.build.json",
     "check": "tsc -p tsconfig.json",
     "test": "bun test",
-    "ci": "bun run check && bun run build && bun test"
+    "ci": "bun run check && bun run build && bun test",
+    "changeset": "node node_modules/.bin/changeset",
+    "version-packages": "node node_modules/.bin/changeset version",
+    "release": "node node_modules/.bin/changeset publish"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.1",
     "@types/bun": "^1.4.0",
     "typescript": "^5.9.3"
   }

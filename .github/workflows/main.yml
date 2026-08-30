@@ -1,36 +1,31 @@
 name: Main
 
-# Everything that happens when `main` moves: the checks run, then the package
-# goes to public npm.
+# Everything that happens when `main` moves: the checks run, then Changesets
+# either opens the "Version Packages" pull request (when changesets are
+# pending) or, once that PR is merged, publishes to npm and cuts the GitHub
+# release.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      publish:
-        description: "Publish to npm"
-        type: boolean
-        default: true
 
 concurrency:
   group: main
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  # The action pushes the version PR branch and creates releases.
+  contents: write
+  pull-requests: write
   # Required for npm Trusted Publishing (OIDC).
   id-token: write
 
 jobs:
   main:
-    name: Check and publish
+    name: Check and release
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      # The patch is the run number so every push publishes; bump the minor
-      # for feature milestones by editing this line.
-      PUBLISH_VERSION: 0.1.${{ github.run_number }}
     steps:
       - uses: actions/checkout@v7
 
@@ -47,22 +42,25 @@ jobs:
       - name: Build
         run: bun run build
 
+      # The capture smoke test drives the runner's preinstalled Chrome
+      # through Bun.WebView's CDP backend.
       - name: Test
         run: bun test
 
       # npm speaks OIDC trusted publishing; a token publish would answer with
-      # a 2FA challenge (`EOTP`) that nobody is there to type.
+      # a 2FA challenge (`EOTP`) that nobody is there to type. The Changesets
+      # CLI also needs Node, since it does not run under Bun.
       - uses: actions/setup-node@v6
-        if: github.event_name == 'push' || inputs.publish
         with:
           node-version: "24"
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
-      - name: Stamp the version
-        if: github.event_name == 'push' || inputs.publish
-        run: npm pkg set "version=${PUBLISH_VERSION}"
-
-      - name: Publish
-        if: github.event_name == 'push' || inputs.publish
-        run: npm publish --access public
+      - uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
+        with:
+          version: bun run version-packages
+          publish: bun run release
+          commit: "Version packages"
+          title: "Version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
